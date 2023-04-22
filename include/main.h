@@ -35,6 +35,7 @@
 #define PROS_USE_LITERALS
 
 #include "api.h"
+#include "try.h"
 
 /**
  * You should add more #includes here
@@ -50,7 +51,7 @@
  * concurrently! The okapi namespace will export all symbols inside the pros
  * namespace.
  */
-// using namespace pros;
+using namespace pros;
 // using namespace pros::literals;
 // using namespace okapi;
 
@@ -77,5 +78,14 @@ void opcontrol(void);
  */
 //#include <iostream>
 #endif
+
+extern pros::Motor left1;
+extern pros::Motor left2;
+extern pros::Motor left3;
+extern pros::Motor left4;
+extern pros::Motor right1;
+extern pros::Motor right2;
+extern pros::Motor right3;
+extern pros::Motor right4;
 
 #endif  // _PROS_MAIN_H_
