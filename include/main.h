@@ -87,5 +87,6 @@ extern pros::Motor right1;
 extern pros::Motor right2;
 extern pros::Motor right3;
 extern pros::Motor right4;
+extern pros::Imu imu;
 
 #endif  // _PROS_MAIN_H_

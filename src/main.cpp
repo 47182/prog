@@ -1,4 +1,40 @@
 #include "main.h"
+#include "math.h"
+using namespace pros;
+Controller master(E_CONTROLLER_MASTER);
+Motor left1(11,1);
+Motor left2(12,1);
+Motor left3(13,1);
+Motor left4(14,1);
+Motor right1(17);
+Motor right2(18);
+Motor right3(19);
+Motor right4(20);
+Imu imu(21);
+
+void BrakeOn() {
+	left1.set_brake_mode(MOTOR_BRAKE_BRAKE);
+	left2.set_brake_mode(MOTOR_BRAKE_BRAKE);
+	left3.set_brake_mode(MOTOR_BRAKE_BRAKE);
+	left4.set_brake_mode(MOTOR_BRAKE_BRAKE);
+	right1.set_brake_mode(MOTOR_BRAKE_BRAKE);
+	right2.set_brake_mode(MOTOR_BRAKE_BRAKE);
+	right3.set_brake_mode(MOTOR_BRAKE_BRAKE);
+	right4.set_brake_mode(MOTOR_BRAKE_BRAKE);
+}
+void BrakeOff() {
+	left1.set_brake_mode(MOTOR_BRAKE_COAST);
+	left2.set_brake_mode(MOTOR_BRAKE_COAST);
+	left3.set_brake_mode(MOTOR_BRAKE_COAST);
+	left4.set_brake_mode(MOTOR_BRAKE_COAST);
+	right1.set_brake_mode(MOTOR_BRAKE_COAST);
+	right2.set_brake_mode(MOTOR_BRAKE_COAST);
+	right3.set_brake_mode(MOTOR_BRAKE_COAST);
+	right4.set_brake_mode(MOTOR_BRAKE_COAST);
+
+
+}
+
 
 /**
  * A callback function for LLEMU's center button.
@@ -16,6 +52,7 @@ void on_center_button() {
 	}
 }
 
+
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -23,10 +60,8 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Hello PROS User!");
-
-	pros::lcd::register_btn1_cb(on_center_button);
+delay(500);
+imu.reset();
 }
 
 /**
@@ -58,7 +93,18 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void autonomous() {
+	DriveStraight(10,1,0,0);
+/*BrakeOff();
+PIDdrive(10,0.2,0.01,5);
+	BrakeOn();
+PIDdrive(10,0.2,0.01,5);
+imu.reset();
+//imuturn(90, 1, 0.01, 5);
+// imuturn(-90, 1, 0.01, 5);*/
+}
+
+
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -74,20 +120,37 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	pros::Controller master(pros::E_CONTROLLER_MASTER);
-	pros::Motor left_mtr(1);
-	pros::Motor right_mtr(2);
 
+	//DriveStraight(10,0.2,0.01,5);
+	//PIDdrive(10,0.2,0.01,5);
+	// drive(200);
+	// turn(90);
+	// drive(200);
+
+	//drivetime(350);
+	//delay(2000);
+	//drivetime(-350)
+	// drivetime(350);
+	// delay(2000);
+	// turntime(170);
+	// delay(2000);
+	// drivetime(1200);
+	// turntime(311);
 	while (true) {
-		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
-		                 (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
-		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);
+//will print seconds started since program started on line 3
+		screen::set_pen(COLOR_BLUE);
+		screen ::print(TEXT_MEDIUM, 1, "temperature left1: %3f", left1.get_temperature());
+		screen ::print(TEXT_MEDIUM, 2, "temperature: left2 %3f", left2.get_temperature());
+		screen ::print(TEXT_MEDIUM, 3, "temperature: left3 %3f", left3.get_temperature());
+		screen ::print(TEXT_MEDIUM, 4, "temperature: left4 %3f", left4.get_temperature());
+		screen ::print(TEXT_MEDIUM, 5, "temperature: right1 %3f", right1.get_temperature());
+		screen ::print(TEXT_MEDIUM, 6, "temperature:right2 %3f", right2.get_temperature());
+		screen ::print(TEXT_MEDIUM, 7, "temperature: right3 %3f", right3.get_temperature());
+		screen ::print(TEXT_MEDIUM, 8, "temperature:right4  %3f", right4.get_temperature());
 		int left = master.get_analog(ANALOG_LEFT_Y);
-		int right = master.get_analog(ANALOG_RIGHT_Y);
+		int right = master.get_analog(ANALOG_LEFT_X);
 
-		left_mtr = left;
-		right_mtr = right;
-
+		powerDrive(left,right);
 		pros::delay(20);
 	}
 }
